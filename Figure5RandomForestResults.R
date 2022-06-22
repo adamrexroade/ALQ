@@ -132,7 +132,8 @@ ch4conc.vi <- ggplot(vi_ch4conc) +
   xlab('Variable')+
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))  +
-  facet_wrap(~group)
+  facet_wrap(~group)+
+  theme(strip.background = element_rect(fill=alpha("deeppink4",0.1))) 
 
 
 
