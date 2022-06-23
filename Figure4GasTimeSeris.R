@@ -75,7 +75,7 @@ conc <- ggplot(df_long_conc,aes(x=as.Date(Day, origin=as.Date("2020-01-01")),y=v
 #  theme(strip.background = element_rect(fill=alpha("deeppink4",0.2)))
 
 spatial <- ggplot(df_long_conc) +
-  geom_boxplot(aes(x=Site, y=value))+
+  geom_boxplot(aes(x=Site, y=value, colour=Year))+
   facet_wrap(~Gas, scales = "free_y")+
   ylab(expression(Concentration~(µmol~L^-1)))+
   theme_bw()
