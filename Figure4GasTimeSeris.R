@@ -86,5 +86,45 @@ A
 B
 C"
 
-conc+flux+spatial+plot_layout(design = layout, guides = "collect")
+conc+flux+spatial+plot_layout(design = layout, guides = "collect")+plot_annotation(tag_levels = 'A')
 ggsave("Figures/Figure4.png", plot=last_plot())
+
+#### Friedman Test ####
+
+df <- read_csv("Data/clean.v2.csv")
+df <- df %>% 
+  filter(Depth=="0") %>% 
+  filter(Time=="Day") %>% 
+  mutate(Year=as.factor(year(Date))) %>% 
+  mutate(Day=yday(Date)) %>% 
+  select(Date,Site,Year,Day,fCO2,fCH4,dCO2,dCH4, Depth)
+
+
+library(PMCMRplus)
+df.na <- na.omit(df) %>% 
+  mutate(ID= paste(Date,Site))
+df.na$Date <- as.factor(df.na$Date)
+df.na$Site <- as.factor(df.na$Site)
+df.na$dCO2 <- as.numeric(df.na$dCO2)
+df.1 <-  as.data.frame(df.na) 
+
+#co2
+df.2 <- df %>% 
+  select(Site, Date, dCO2)
+df.2_co2 <- pivot_wider(df.2, names_from = Site, values_from = dCO2 ) %>% 
+  na.omit() %>% 
+  mutate(Date=NULL)
+friedman.test(as.matrix(df.2_co2))
+frdAllPairsNemenyiTest(as.matrix(df.2_co2))
+
+#ch4
+df.3 <- df %>% 
+  select(Site, Date, dCH4)
+df.3_ch4<- pivot_wider(df.3, names_from = Site, values_from = dCH4 ) %>% 
+  na.omit() %>% 
+  mutate(Date=NULL)
+friedman.test(as.matrix(df.3_ch4))
+frdAllPairsNemenyiTest(y=as.matrix(df.3_ch4))
+
+
+
