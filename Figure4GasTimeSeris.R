@@ -78,6 +78,7 @@ spatial <- ggplot(df_long_conc) +
   geom_boxplot(aes(x=Site, y=value, colour=Year))+
   facet_wrap(~Gas, scales = "free_y")+
   ylab(expression(Concentration~(µmol~L^-1)))+
+  scale_color_manual(values=c("darkseagreen4", "sandybrown"))+
   theme_bw()
 
 layout <- "
