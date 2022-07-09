@@ -96,35 +96,50 @@ df <- df %>%
   filter(Depth=="0") %>% 
   filter(Time=="Day") %>% 
   mutate(Year=as.factor(year(Date))) %>% 
+  mutate(Week=as.numeric(week(Date))) %>% 
   mutate(Day=yday(Date)) %>% 
-  select(Date,Site,Year,Day,fCO2,fCH4,dCO2,dCH4, Depth)
+  select(Date,Site,Year,Week,Day,fCO2,fCH4,dCO2,dCH4, Depth)
 
 
 library(PMCMRplus)
 df.na <- na.omit(df) %>% 
-  mutate(ID= paste(Date,Site))
-df.na$Date <- as.factor(df.na$Date)
-df.na$Site <- as.factor(df.na$Site)
-df.na$dCO2 <- as.numeric(df.na$dCO2)
+  mutate(ID= paste(Year,Site))
+ df.na$Date <- as.factor(df.na$Date)
 df.1 <-  as.data.frame(df.na) 
 
 #co2
-df.2 <- df %>% 
-  select(Site, Date, dCO2)
-df.2_co2 <- pivot_wider(df.2, names_from = Site, values_from = dCO2 ) %>% 
-  na.omit() %>% 
+df.2 <- df.1 %>% 
+  select(Date,ID, dCO2)
+df.2_co2 <- pivot_wider(df.2, names_from = ID, values_from = dCO2) %>% 
+  # na.omit() %>% 
+  mutate(Week=week(as.Date(Date))) %>% 
   mutate(Date=NULL)
-friedman.test(as.matrix(df.2_co2))
-frdAllPairsNemenyiTest(as.matrix(df.2_co2))
+
+co2fried <- df.2_co2 %>% 
+  group_by(Week) %>% 
+  fill(`2020 AL1`, `2020 AL2`, `2020 AL3`, `2021 AL1`, `2021 AL2`, `2021 AL3`) %>% 
+  fill(`2020 AL1`, `2020 AL2`, `2020 AL3`, `2021 AL1`, `2021 AL2`, `2021 AL3`, .direction = 'up') %>% 
+  distinct
+friedman.test(as.matrix(co2fried))
+
+co2nem <- co2fried %>% 
+  na.omit() %>% 
+  pivot_longer(everything(), names_to = "ID", values_to = 'values' )
+
+frdAllPairsNemenyiTest(as.matrix(co2fried$))
 
 #ch4
-df.3 <- df %>% 
-  select(Site, Date, dCH4)
-df.3_ch4<- pivot_wider(df.3, names_from = Site, values_from = dCH4 ) %>% 
-  na.omit() %>% 
+df.3 <- df.1 %>% 
+  select(Date,ID, dCH4)
+df.3_ch4 <- pivot_wider(df.3, names_from = ID, values_from = dCH4) %>% 
+  # na.omit() %>% 
+  mutate(Week=week(as.Date(Date))) %>% 
   mutate(Date=NULL)
-friedman.test(as.matrix(df.3_ch4))
-frdAllPairsNemenyiTest(y=as.matrix(df.3_ch4))
 
-
-
+ch4fried <- df.3_ch4 %>% 
+  group_by(Week) %>% 
+  fill(`2020 AL1`, `2020 AL2`, `2020 AL3`, `2021 AL1`, `2021 AL2`, `2021 AL3`) %>% 
+  fill(`2020 AL1`, `2020 AL2`, `2020 AL3`, `2021 AL1`, `2021 AL2`, `2021 AL3`, .direction = 'up') %>% 
+  distinct
+friedman.test(as.matrix(ch4fried))
+frdAllPairsNemenyiTest(as.matrix(ch4fried))
