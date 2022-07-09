@@ -37,6 +37,6 @@ b <- ggplot(kvalues)+
 
 
 a+b+
-  plot_layout(guides ='collect')
+  plot_layout(guides ='collect')+plot_annotation(tag_levels = 'A')
 
 ggsave("Figures/FigureS2.png", plot=last_plot())

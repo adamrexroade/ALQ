@@ -127,5 +127,5 @@ layout <- "
 AA
 BB
 CD"
-p1+p2+p3 + guide_area()+ plot_layout(guides = 'collect', design =  layout)
+p1+p2+p3 + guide_area()+ plot_layout(guides = 'collect', design =  layout)+plot_annotation(tag_levels = 'A')
 ggsave("Figures/Figure6.png", plot = last_plot())

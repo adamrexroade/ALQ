@@ -69,5 +69,5 @@ summary(lm)
 
 design <- "A
 b"
-ts+linearplot+plot_layout(design=design)
+ts+linearplot+plot_layout(design=design)+plot_annotation(tag_levels = 'A')
 ggsave("Figures/FigureS1.png", plot=last_plot())

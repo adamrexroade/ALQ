@@ -159,7 +159,8 @@ ch4conc.ob.vs.pr+ch4conc.pdp+
   ch4conc.vi+
   co2conc.ob.vs.pr+co2conc.pdp+
   co2conc.vi+
-  plot_layout(design = layout)
+  plot_layout(design = layout)+
+  plot_annotation(tag_levels = 'A')
 
 
 
