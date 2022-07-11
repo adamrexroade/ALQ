@@ -68,7 +68,7 @@ C"
 dis+
   do+
   tem+
-  plot_layout(design= design,guides = 'collect')
+  plot_layout(design= design,guides = 'collect')+plot_annotation(tag_levels = 'A')
 
 
 ggsave("Figures/Figure3.png", plot=last_plot())
