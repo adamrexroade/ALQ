@@ -81,8 +81,8 @@ co2conc.vi <- ggplot(vi) +
 ## Observe vs predicted ----
 dco2_ob_pr <- data.frame(predict(co2conc_rf), rf_dco2_df$dCO2)
 co2conc.ob.vs.pr <- ggplot(dco2_ob_pr)+
-  geom_smooth(aes(x=rf_dco2_df.dCO2, y=predict.co2conc_rf.), method='lm', color="dodgerblue4")+
   geom_point(aes(x=rf_dco2_df.dCO2, y=predict.co2conc_rf.))+
+  geom_abline(slope = 1, intercept = 0, color="dodgerblue4", size=1 )+
   theme_bw()+
   xlab("Observed CO2 
        Concentration (µmol/L)")+
@@ -140,8 +140,8 @@ ch4conc.vi <- ggplot(vi_ch4conc) +
 ## Observe vs predicted ----
 dch4.ob.pr <- data.frame(predict(ch4conc_rf), rf_dch4_df$dCH4)
 ch4conc.ob.vs.pr <- ggplot(dch4.ob.pr)+
-  geom_smooth(aes(x=rf_dch4_df.dCH4, y=predict.ch4conc_rf.), method='lm', color="deeppink4")+
   geom_point(aes(x=rf_dch4_df.dCH4, y=predict.ch4conc_rf.))+
+  geom_abline(slope = 1, intercept = 0, color="deeppink4", size=1 )+
   theme_bw()+
   xlab("Observed CH4 
        Concentration (µmol/L)")+
