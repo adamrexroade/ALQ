@@ -2,6 +2,7 @@
 
 library(tidyverse)
 library(dplyr)
+library(lubridate)
 library(dataRetrieval)
 library(patchwork)
 library(scales)
@@ -72,3 +73,16 @@ dis+
 
 
 ggsave("Figures/Figure3.png", plot=last_plot())
+
+# Basic Stats
+qsummer <- q_sum %>% 
+  filter(Day < 237) %>% 
+  filter(Day > 152)
+
+qsummer20 <- qsummer %>% 
+  filter(Year=="2020")
+qsummer21 <- qsummer %>% 
+  filter(Year=="2021")
+
+summary(qsummer20)
+summary(qsummer21)
