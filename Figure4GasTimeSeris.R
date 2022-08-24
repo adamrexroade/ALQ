@@ -122,11 +122,21 @@ co2fried <- df.2_co2 %>%
   distinct
 friedman.test(as.matrix(co2fried))
 
+pairwise.wilcox.test(co2con$value, co2con$name, p.adjust.method = "bonf", exact=FALSE)
+
+
+co2con <- na.omit(co2fried) %>% 
+  pivot_longer(cols=c(`2020 AL1`, `2020 AL2`, `2020 AL3`, `2021 AL1`, `2021 AL2`, `2021 AL3`) )
+
+co2con$Week <- as.factor(co2con$Week)
+co2con$name <- as.factor(co2con$name)
+frdAllPairsConoverTest(y=co2con$value, groups=as.factor(co2con$Week), blocks=as.factor(co2con$name), p.adjust.method = "bonf")
+
 co2nem <- co2fried %>% 
   na.omit() %>% 
   pivot_longer(everything(), names_to = "ID", values_to = 'values' )
 
-frdAllPairsNemenyiTest(as.matrix(co2fried$))
+frdAllPairsNemenyiTest(as.matrix(co2fried))
 
 #ch4
 df.3 <- df.1 %>% 
