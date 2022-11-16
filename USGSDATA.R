@@ -8,17 +8,20 @@ df <- read_csv("Data/USGSSynoptic.csv") %>%
   filter(!str_detect(Site, "Spring")) %>% 
   filter(!str_detect(Site, "Pond"))
 
-
-ggplot(df, aes(Date, `CO2_umoles/L_syringe`, colour=Site))+
+#time Series
+c <- ggplot(df, aes(Date, `CO2_umoles/L_syringe`, colour=Site))+
   geom_line()+
-  theme(legend.position = "top")
-  scale_x_discrete(breaks = c("2018", "2019","2020"))
+  theme(legend.position = "top")+
+  ylim(50,220)
   
-  ggplot(df, aes(Date, `CH4_umoles/L_syringe`, colour=Site))+
-    geom_line()+
-    theme(legend.position = "top")
-  scale_x_discrete(breaks = c("2018", "2019","2020"))
-  
+d <- ggplot(df, aes(Date, `CH4_umoles/L_syringe`, colour=Site))+
+  geom_line()+
+  theme(legend.position = "top")+
+  ylim(0,5)
+
+c+d+plot_layout(ncol=1)
+
+# stie plots  
 a <- ggplot(df, aes(Site, `CO2_umoles/L_syringe`))+
   geom_boxplot()+
   geom_jitter()+
