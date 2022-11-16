@@ -31,7 +31,7 @@ a <- ggplot(df, aes(Site, `CO2_umoles/L_syringe`))+
                             "ALLEQUASH CREEK SITE NO. 3 NR BOULDER JUNCTION, WI"))+
   ylim(0,210)
 
-## okay this 
+
 b <- ggplot(df, aes(Site, `CH4_umoles/L_syringe`))+
   geom_boxplot()+
   geom_jitter()+
@@ -43,4 +43,6 @@ b <- ggplot(df, aes(Site, `CH4_umoles/L_syringe`))+
                             "Allequash Creek Synoptic 4",
                             "ALLEQUASH CREEK SITE NO. 3 NR BOULDER JUNCTION, WI"))+
   ylim(0,10)
+
 a+b+plot_layout(ncol = 1)
+
