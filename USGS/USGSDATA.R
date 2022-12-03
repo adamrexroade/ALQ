@@ -4,6 +4,8 @@ library(lubridate)
 library(patchwork)
 library(dataRetrieval)
 
+
+# Expore USGS Data Release ----
 df <- read_csv("Data/USGSSynoptic.csv") %>% 
   mutate(YEAR=year(Date)) %>% 
   filter(!str_detect(Site, "Spring")) %>% 
@@ -54,7 +56,7 @@ b <- ggplot(df, aes(Site, `CH4_umoles/L_syringe`))+
 
 a+b+plot_layout(ncol = 1)
 
-# look at discharge
+# look at discharge ----
 
 Q<-readNWISdata(sites=c("05357205",  "05357206"), parameterCd =c("00060"), 
                 startDate = "2018-10-01", endDate = "2021-11-10", service="iv") %>% 
@@ -69,6 +71,45 @@ q_sum <- Q %>%
   mutate(Year=as.factor(year(Date))) %>% 
   mutate(Day=yday(Date))
 
-q_long <- pivot_longer(q_sum, cols = c(`Discharge (m3/sec)`)
+q_wide <- pivot_wider(q_sum, names_from = site_no, values_from = `Discharge (m3/sec)`) %>% 
+  rename(up=`05357205`,
+         down=`05357206`) %>% 
+  mutate(qdif=down-up)
+
+
+q_long <- pivot_longer(q_wide, cols = c("up","down","qdif"))
+
+ggplot(q_long, aes(Date, value, colour=name))+
+  geom_line()
+  geom_ribbon(data=q_wide, aes(ymin=up, ymax=down))
+
+
+
+# Excess saturation ----
+
+df <- read_csv("Data/clean.v2.csv")
+atsat <- read_csv("Data/seasonalsaturated.csv")
+
+data <- left_join(df,atsat, by=c("Date","Site", "Depth")) %>% 
+  mutate(excessCO2=dCO2-CO2,
+         excessCH4=dCH4-CH4)
+
+ggplot(data, aes(excessCO2, excessCH4, color=Site))+
+  geom_point()+
+  geom_abline(intercept = -20, slope =1 )+
+  ylab("Excess CH4 (umol/L)")+
+  xlab("Excess CO2 (umol/L)")
+
+data1 <- left_join(data,q_wide, by="Date")
+
+
+ggplot(data1, aes(qdif,excessCO2))+
+  geom_point()+
+  facet_wrap(~Site)
+ggplot(data1, aes(qdif,excessCH4))+
+   geom_point()+
+  geom_smooth(method = lm)+
+  facet_wrap(~Site)
+  
 
 
