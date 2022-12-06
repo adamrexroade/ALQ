@@ -3,6 +3,8 @@ library(dplyr)
 library(lubridate)
 library(patchwork)
 library(dataRetrieval)
+library(broom)
+library(ggpubr)
 
 
 # Expore USGS Data Release ----
@@ -79,6 +81,7 @@ q_wide <- pivot_wider(q_sum, names_from = site_no, values_from = `Discharge (m3/
 
 q_long <- pivot_longer(q_wide, cols = c("up","down","qdif"))
 
+# differnce in discharge between up and down
 ggplot(q_long, aes(Date, value, colour=name))+
   geom_line()
   geom_ribbon(data=q_wide, aes(ymin=up, ymax=down))
@@ -96,20 +99,28 @@ data <- left_join(df,atsat, by=c("Date","Site", "Depth")) %>%
 
 ggplot(data, aes(excessCO2, excessCH4, color=Site))+
   geom_point()+
-  geom_abline(intercept = -20, slope =1 )+
+#  geom_abline(intercept = -20, slope =1 )+
   ylab("Excess CH4 (umol/L)")+
   xlab("Excess CO2 (umol/L)")
-
+ggsave("USGS/Figures/ExcessCO2vsExcessCH4.png", plot = last_plot())
 data1 <- left_join(data,q_wide, by="Date")
 
 
+# Excess gas vs discharge
 ggplot(data1, aes(qdif,excessCO2))+
   geom_point()+
+  geom_smooth(method = lm)+
+  stat_regline_equation(label.x.npc = "left")+
+  xlab("Q Difference (m3/s)")+
+  ylab("Excess CO2 (umol/L)")+
   facet_wrap(~Site)
+ggsave("USGS/Figures/DiscahrgeDiffvsExcessCO2.png", plot = last_plot())
 ggplot(data1, aes(qdif,excessCH4))+
    geom_point()+
   geom_smooth(method = lm)+
+  stat_regline_equation(label.x.npc = "left")+
+  xlab("Q Difference (m3/s)")+
+  ylab("Excess CH4 (umol/L)")+
   facet_wrap(~Site)
-  
-
+ggsave("USGS/Figures/DiscahrgeDiffvsExcessCH4.png", plot = last_plot())
 
