@@ -8,7 +8,7 @@ library(ggpubr)
 
 
 # Expore USGS Data Release ----
-df <- read_csv("Data/USGSSynoptic.csv") %>% 
+df <- read_csv("USGS/USGSSynoptic.csv") %>% 
   mutate(YEAR=year(Date)) %>% 
   filter(!str_detect(Site, "Spring")) %>% 
   filter(!str_detect(Site, "Pond"))
@@ -106,8 +106,8 @@ ggsave("USGS/Figures/ExcessCO2vsExcessCH4.png", plot = last_plot())
 data1 <- left_join(data,q_wide, by="Date")
 
 
-# Excess gas vs discharge
-ggplot(data1, aes(qdif,excessCO2))+
+## Excess gas vs discharge -----
+a1 <- ggplot(data1, aes(qdif,excessCO2))+
   geom_point()+
   geom_smooth(method = lm)+
   stat_regline_equation(label.x.npc = "left")+
@@ -115,7 +115,7 @@ ggplot(data1, aes(qdif,excessCO2))+
   ylab("Excess CO2 (umol/L)")+
   facet_wrap(~Site)
 ggsave("USGS/Figures/DiscahrgeDiffvsExcessCO2.png", plot = last_plot())
-ggplot(data1, aes(qdif,excessCH4))+
+a2 <- ggplot(data1, aes(qdif,excessCH4))+
    geom_point()+
   geom_smooth(method = lm)+
   stat_regline_equation(label.x.npc = "left")+
@@ -123,4 +123,34 @@ ggplot(data1, aes(qdif,excessCH4))+
   ylab("Excess CH4 (umol/L)")+
   facet_wrap(~Site)
 ggsave("USGS/Figures/DiscahrgeDiffvsExcessCH4.png", plot = last_plot())
+
+
+a1+a2+plot_layout(ncol=1)
+
+# Q Conc Plot ----
+
+a <- ggplot(data1, aes(fill=Site))+
+  geom_point(aes(up,dCO2), shape=24)+
+  theme_bw()+
+  theme(legend.position="none")+
+  xlab("")
+b <- ggplot(data1, aes(fill=Site))+
+  geom_point(aes(down,dCO2), shape=25)+
+  theme_bw()+
+  xlab("")+
+  ylab("")
+
+c <- ggplot(data1, aes(fill=Site))+
+  geom_point(aes(up,dCH4), shape=24)+
+  theme_bw()+
+  theme(legend.position="none")
+d <- ggplot(data1, aes(fill=Site))+
+  geom_point(aes(down, dCH4), shape=25)+
+  theme_bw()+
+  ylab("")
+
+a+b+c+d+plot_layout(nrow = 2)
+ggsave("USGS/Figures/QConc.png", plot = last_plot())
+
+
 
