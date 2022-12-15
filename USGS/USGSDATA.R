@@ -237,3 +237,10 @@ ggplot(data, aes(YEAR, dCO2, colour=Site))+
   geom_boxplot()+
   theme_bw()+
   theme(legend.position = "bottom")
+ggsave("USGS/Figures/SumAverageDischargevsYearC2Conc.png", plot = last_plot())
+
+ggplot(data, aes(YEAR, dCH4, colour=Site))+
+  geom_boxplot()+
+  theme_bw()+
+  theme(legend.position = "bottom")
+ggsave("USGS/Figures/SumAverageDischargevsYearCH4Conc.png", plot = last_plot())
